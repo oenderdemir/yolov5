@@ -1,0 +1,9 @@
+rtsp: yes
+rtspAddress: :554
+
+paths:
+  stream:
+    publishUser: "streamer"
+    publishPass: "streampass"
+    readUser: "viewer"
+    readPass: "viewpass"

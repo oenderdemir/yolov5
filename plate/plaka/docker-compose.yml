@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  plakabulucu:
+    build: .
+    container_name: plakabulucu
+    ports:
+      - "5900:5900"
+    volumes:
+      - ./video_results:/app/video_results
+      - ./config.json:/app/config.json
+
+  rtsp-server:
+    image: bluenviron/mediamtx:latest
+    container_name: rtsp-server
+    ports:
+      - "554:554"
+    volumes:
+      - ./mediamtx.yml:/mediamtx.yml
+
+  streamer:
+    image: jrottenberg/ffmpeg
+    container_name: rtsp-streamer
+    depends_on:
+      - rtsp-server
+    volumes:
+      - ./videos:/videos
+    command: >
+      -re -stream_loop -1 -i /videos/arac_test.mp4
+      -c copy -f rtsp rtsp://streamer:streampass@rtsp-server:554/stream
